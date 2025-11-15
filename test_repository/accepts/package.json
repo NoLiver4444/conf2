@@ -1,0 +1,9 @@
+{
+  "name": "accepts",
+  "version": "1.3.8",
+  "description": "Higher-level content negotiation",
+  "main": "index.js",
+  "dependencies": {
+    "mime-types": "~2.1.34"
+  }
+}

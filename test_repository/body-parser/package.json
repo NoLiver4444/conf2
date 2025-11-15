@@ -1,0 +1,10 @@
+{
+  "name": "body-parser",
+  "version": "1.20.1",
+  "description": "Node.js body parsing middleware",
+  "main": "index.js",
+  "dependencies": {
+    "bytes": "3.1.2",
+    "http-errors": "2.0.0"
+  }
+}

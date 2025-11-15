@@ -1,0 +1,13 @@
+{
+  "name": "react",
+  "version": "18.2.0",
+  "description": "React JavaScript library",
+  "main": "index.js",
+  "dependencies": {
+    "loose-envify": "^1.1.0",
+    "object-assign": "^4.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}

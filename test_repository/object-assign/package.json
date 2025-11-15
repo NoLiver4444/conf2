@@ -1,0 +1,7 @@
+{
+  "name": "object-assign",
+  "version": "4.1.1",
+  "description": "ES6 Object.assign() polyfill",
+  "main": "index.js",
+  "dependencies": {}
+}

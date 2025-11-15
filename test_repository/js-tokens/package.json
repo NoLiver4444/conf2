@@ -1,0 +1,7 @@
+{
+  "name": "js-tokens",
+  "version": "4.0.0",
+  "description": "Tokenizer for JavaScript",
+  "main": "index.js",
+  "dependencies": {}
+}

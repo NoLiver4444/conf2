@@ -1,0 +1,9 @@
+{
+  "name": "loose-envify",
+  "version": "1.4.0",
+  "description": "Fast loose envify for Node.js",
+  "main": "index.js",
+  "dependencies": {
+    "js-tokens": "^4.0.0"
+  }
+}

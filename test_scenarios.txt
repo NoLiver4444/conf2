@@ -1,0 +1,272 @@
+# ТЕСТОВЫЕ СЦЕНАРИИ ДЛЯ ИНСТРУМЕНТА ВИЗУАЛИЗАЦИИ ЗАВИСИМОСТЕЙ
+# ============================================================
+
+## 1. ОСНОВНЫЕ РАБОЧИЕ СЦЕНАРИИ
+### 1.1. Удаленный режим (npm registry)
+
+# React - находит зависимости в старых версиях
+{
+  "package_name": "react",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Express - много зависимостей
+{
+  "package_name": "express",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Webpack - сложные зависимости
+{
+  "package_name": "webpack",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Jest - фреймворк тестирования
+{
+  "package_name": "jest",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Axios - HTTP клиент
+{
+  "package_name": "axios",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# TypeScript - компилятор
+{
+  "package_name": "typescript",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+### 1.2. Тестовый режим (локальные файлы)
+
+# Webapp - пример приложения с зависимостями
+{
+  "package_name": "webapp",
+  "repository_url": "test_repository",
+  "repository_mode": "test"
+}
+
+# React из тестового репозитория
+{
+  "package_name": "react",
+  "repository_url": "test_repository",
+  "repository_mode": "test"
+}
+
+# Express из тестового репозитория
+{
+  "package_name": "express",
+  "repository_url": "test_repository",
+  "repository_mode": "test"
+}
+
+## 2. ПАКЕТЫ БЕЗ ЗАВИСИМОСТЕЙ (краевые случаи)
+
+# Lodash - утилиты (нет зависимостей)
+{
+  "package_name": "lodash",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Chalk - цвета в терминале
+{
+  "package_name": "chalk",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Debug - отладка
+{
+  "package_name": "debug",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Uuid - генерация UUID
+{
+  "package_name": "uuid",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+## 3. СЦЕНАРИИ С ОШИБКАМИ (проверка обработки ошибок)
+
+### 3.1. Ошибки конфигурации
+
+# Несуществующий пакет
+{
+  "package_name": "nonexistent-package-12345xyz",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Неправильный URL репозитория
+{
+  "package_name": "react",
+  "repository_url": "invalid-url-without-protocol",
+  "repository_mode": "remote"
+}
+
+# Неправильный режим работы
+{
+  "package_name": "react",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "invalid_mode"
+}
+
+# Пустое имя пакета
+{
+  "package_name": "",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Пустой URL репозитория
+{
+  "package_name": "react",
+  "repository_url": "",
+  "repository_mode": "remote"
+}
+
+# Пустой режим
+{
+  "package_name": "react",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": ""
+}
+
+### 3.2. Ошибки тестового режима
+
+# Несуществующий тестовый репозиторий
+{
+  "package_name": "react",
+  "repository_url": "nonexistent_folder_123",
+  "repository_mode": "test"
+}
+
+# Несуществующий пакет в тестовом репозитории
+{
+  "package_name": "nonexistent-package",
+  "repository_url": "test_repository",
+  "repository_mode": "test"
+}
+
+# Поврежденный package.json
+{
+  "package_name": "corrupted-package",
+  "repository_url": "test_repository",
+  "repository_mode": "test"
+}
+
+## 4. ДОПОЛНИТЕЛЬНЫЕ ТЕСТОВЫЕ ПАКЕТЫ
+
+### 4.1. Популярные пакеты с зависимостями
+
+# Babel - транспайлер
+{
+  "package_name": "@babel/core",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Vue.js - фреймворк
+{
+  "package_name": "vue",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Angular - фреймворк
+{
+  "package_name": "@angular/core",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Next.js - фреймворк React
+{
+  "package_name": "next",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# ESLint - линтер
+{
+  "package_name": "eslint",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+### 4.2. Пакеты с нестандартной структурой
+
+# React DOM (отдельный пакет)
+{
+  "package_name": "react-dom",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+# Node.js built-in modules (должны отсутствовать в npm)
+{
+  "package_name": "fs",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+
+## 5. КОМАНДЫ ДЛЯ БЫСТРОГО ТЕСТИРОВАНИЯ
+
+# Для быстрого переключения между конфигурациями создайте отдельные файлы:
+
+# config_react.json
+echo '{"package_name": "react", "repository_url": "https://registry.npmjs.org", "repository_mode": "remote"}' > config_react.json
+
+# config_express.json
+echo '{"package_name": "express", "repository_url": "https://registry.npmjs.org", "repository_mode": "remote"}' > config_express.json
+
+# config_webapp_test.json
+echo '{"package_name": "webapp", "repository_url": "test_repository", "repository_mode": "test"}' > config_webapp_test.json
+
+# Затем копируйте нужный конфиг:
+cp config_react.json config.json && python dependency_visualizer.py
+cp config_express.json config.json && python dependency_visualizer.py
+cp config_webapp_test.json config.json && python dependency_visualizer.py
+
+## 6. ОЖИДАЕМЫЕ РЕЗУЛЬТАТЫ
+
+✅ РАБОЧИЕ СЦЕНАРИИ:
+- React: зависимости в версиях до 19.x
+- Express: 20+ зависимостей
+- Webpack: 100+ зависимостей
+- Webapp (тест): 3 зависимости (react, express, axios)
+
+✅ ПАКЕТЫ БЕЗ ЗАВИСИМОСТЕЙ:
+- Lodash, Chalk и др.: "Прямые зависимости не найдены"
+
+❌ СЦЕНАРИИ С ОШИБКАМИ:
+- Корректные сообщения об ошибках
+- Не аварийное завершение
+
+## 7. ПОСЛЕДОВАТЕЛЬНОСТЬ ТЕСТИРОВАНИЯ
+
+1. Сначала тестовый режим (webapp)
+2. Затем простые пакеты (express)
+3. Сложные пакеты (webpack)
+4. Пакеты без зависимостей (lodash)
+5. Сценарии с ошибками
+
+## 8. ПРИМЕЧАНИЯ
+
+- Для тестового режима должен существовать каталог test_repository/
+- Некоторые пакеты (как React) могут не иметь зависимостей в последних версиях
+- Инструмент автоматически ищет версии с зависимостями
+- Все ошибки должны обрабатываться корректно без падения приложения
