@@ -2,6 +2,7 @@
   "package_name": "express",
   "repository_url": "https://registry.npmjs.org",
   "repository_mode": "remote",
-  "generate_graphviz": true,
-  "generate_image": true
+  "show_reverse_deps": false,
+  "generate_graphviz": false,
+  "generate_image": false
 }
