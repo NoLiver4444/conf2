@@ -1,8 +1,7 @@
 {
-  "package_name": "A",
-  "repository_url": "test_graphs/simple_graph.json",
-  "repository_mode": "graph_file",
-  "show_reverse_deps": true,
+  "package_name": "express",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote",
   "generate_graphviz": true,
-  "generate_image": false
+  "generate_image": true
 }

@@ -1,272 +1,379 @@
-# ТЕСТОВЫЕ СЦЕНАРИИ ДЛЯ ИНСТРУМЕНТА ВИЗУАЛИЗАЦИИ ЗАВИСИМОСТЕЙ
-# ============================================================
+ТЕСТОВЫЕ СЦЕНАРИИ ДЛЯ ИНСТРУМЕНТА ВИЗУАЛИЗАЦИИ ГРАФА ЗАВИСИМОСТЕЙ
+=================================================================
 
-## 1. ОСНОВНЫЕ РАБОЧИЕ СЦЕНАРИИ
-### 1.1. Удаленный режим (npm registry)
+📋 СОДЕРЖАНИЕ:
+1. Базовые тестовые сценарии
+2. Тестирование этапа 1 (Конфигурация)
+3. Тестирование этапа 2 (Сбор данных) 
+4. Тестирование этапа 3 (Построение графа)
+5. Тестирование этапа 4 (Обратные зависимости)
+6. Тестирование этапа 5 (Визуализация)
+7. Тестирование обработки ошибок
+8. Комплексные тестовые сценарии
 
-# React - находит зависимости в старых версиях
-{
-  "package_name": "react",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+1. 🎯 БАЗОВЫЕ ТЕСТОВЫЕ СЦЕНАРИИ
+--------------------------------
 
-# Express - много зависимостей
-{
-  "package_name": "express",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
-
-# Webpack - сложные зависимости
-{
-  "package_name": "webpack",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
-
-# Jest - фреймворк тестирования
-{
-  "package_name": "jest",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
-
-# Axios - HTTP клиент
-{
-  "package_name": "axios",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
-
-# TypeScript - компилятор
-{
-  "package_name": "typescript",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
-
-### 1.2. Тестовый режим (локальные файлы)
-
-# Webapp - пример приложения с зависимостями
-{
-  "package_name": "webapp",
-  "repository_url": "test_repository",
-  "repository_mode": "test"
-}
-
-# React из тестового репозитория
-{
-  "package_name": "react",
-  "repository_url": "test_repository",
-  "repository_mode": "test"
-}
-
-# Express из тестового репозитория
+СЦЕНАРИЙ 1.1: Быстрый старт
+Конфиг: config.json
 {
   "package_name": "express",
-  "repository_url": "test_repository",
-  "repository_mode": "test"
-}
-
-## 2. ПАКЕТЫ БЕЗ ЗАВИСИМОСТЕЙ (краевые случаи)
-
-# Lodash - утилиты (нет зависимостей)
-{
-  "package_name": "lodash",
   "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
+  "repository_mode": "remote",
+  "show_reverse_deps": false,
+  "generate_graphviz": false,
+  "generate_image": false
 }
+Ожидание: Показывает прямые зависимости Express
 
-# Chalk - цвета в терминале
+СЦЕНАРИЙ 1.2: Простой граф
+Конфиг: config_simple.json
 {
-  "package_name": "chalk",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
+  "package_name": "A",
+  "repository_url": "test_graphs/simple_graph.json",
+  "repository_mode": "graph_file",
+  "show_reverse_deps": true,
+  "generate_graphviz": true,
+  "generate_image": false
 }
+Ожидание: Граф A→B,C; B→D,E; C→F; E→F
 
-# Debug - отладка
+СЦЕНАРИЙ 1.3: Циклические зависимости
+Конфиг: config_cyclic.json
 {
-  "package_name": "debug",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
+  "package_name": "A",
+  "repository_url": "test_graphs/cyclic_graph.json", 
+  "repository_mode": "graph_file",
+  "show_reverse_deps": true,
+  "generate_graphviz": true,
+  "generate_image": true
 }
+Ожидание: Обнаружение циклов A→B→C→A и D→E→D
 
-# Uuid - генерация UUID
-{
-  "package_name": "uuid",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+2. 🔧 ТЕСТИРОВАНИЕ ЭТАПА 1 (КОНФИГУРАЦИЯ)
+-----------------------------------------
 
-## 3. СЦЕНАРИИ С ОШИБКАМИ (проверка обработки ошибок)
-
-### 3.1. Ошибки конфигурации
-
-# Несуществующий пакет
-{
-  "package_name": "nonexistent-package-12345xyz",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
-
-# Неправильный URL репозитория
-{
-  "package_name": "react",
-  "repository_url": "invalid-url-without-protocol",
-  "repository_mode": "remote"
-}
-
-# Неправильный режим работы
+СЦЕНАРИЙ 2.1: Валидная конфигурация
+Конфиг: config_valid.json
 {
   "package_name": "react",
   "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "invalid_mode"
+  "repository_mode": "remote"
 }
+Ожидание: Успешная загрузка конфигурации
 
-# Пустое имя пакета
+СЦЕНАРИЙ 2.2: Невалидный JSON
+Конфиг: config_invalid_json.json
+{
+  "package_name": "react",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote",
+}
+Ожидание: Ошибка парсинга JSON
+
+СЦЕНАРИЙ 2.3: Пустое имя пакета
+Конфиг: config_empty_package.json
 {
   "package_name": "",
   "repository_url": "https://registry.npmjs.org",
   "repository_mode": "remote"
 }
+Ожидание: Ошибка валидации
 
-# Пустой URL репозитория
-{
-  "package_name": "react",
-  "repository_url": "",
-  "repository_mode": "remote"
-}
-
-# Пустой режим
+СЦЕНАРИЙ 2.4: Неправильный режим
+Конфиг: config_invalid_mode.json
 {
   "package_name": "react",
   "repository_url": "https://registry.npmjs.org",
-  "repository_mode": ""
+  "repository_mode": "invalid_mode"
 }
+Ожидание: Ошибка недопустимого режима
 
-### 3.2. Ошибки тестового режима
+3. 📊 ТЕСТИРОВАНИЕ ЭТАПА 2 (СБОР ДАННЫХ)
+----------------------------------------
 
-# Несуществующий тестовый репозиторий
+СЦЕНАРИЙ 3.1: Пакет с зависимостями (Express)
+Конфиг: config_express.json
+{
+  "package_name": "express",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+Ожидание: Находит зависимости accepts, body-parser и др.
+
+СЦЕНАРИЙ 3.2: Пакет без зависимостей (Lodash)
+Конфиг: config_lodash.json
+{
+  "package_name": "lodash",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+Ожидание: "Прямые зависимости не найдены"
+
+СЦЕНАРИЙ 3.3: React (зависимости в старых версиях)
+Конфиг: config_react.json
 {
   "package_name": "react",
-  "repository_url": "nonexistent_folder_123",
-  "repository_mode": "test"
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
 }
+Ожидание: Находит loose-envify в версии 18.x
 
-# Несуществующий пакет в тестовом репозитории
+СЦЕНАРИЙ 3.4: Тестовый репозиторий
+Конфиг: config_webapp_test.json
 {
-  "package_name": "nonexistent-package",
+  "package_name": "webapp",
   "repository_url": "test_repository",
   "repository_mode": "test"
 }
+Ожидание: Зависимости react, express, axios
 
-# Поврежденный package.json
+4. 🕸️ ТЕСТИРОВАНИЕ ЭТАПА 3 (ПОСТРОЕНИЕ ГРАФА)
+---------------------------------------------
+
+СЦЕНАРИЙ 4.1: Простой граф BFS
+Конфиг: config_simple_bfs.json
 {
-  "package_name": "corrupted-package",
+  "package_name": "A",
+  "repository_url": "test_graphs/simple_graph.json",
+  "repository_mode": "graph_file"
+}
+Ожидание: Полный граф из 6 пакетов, глубина 2
+
+СЦЕНАРИЙ 4.2: Циклические зависимости
+Конфиг: config_cyclic_bfs.json
+{
+  "package_name": "A",
+  "repository_url": "test_graphs/cyclic_graph.json",
+  "repository_mode": "graph_file"
+}
+Ожидание: Обнаружение 2 циклов
+
+СЦЕНАРИЙ 4.3: Сложный граф
+Конфиг: config_complex_bfs.json
+{
+  "package_name": "START",
+  "repository_url": "test_graphs/complex_graph.json",
+  "repository_mode": "graph_file"
+}
+Ожидание: Множество циклов, глубина > 3
+
+СЦЕНАРИЙ 4.4: Транзитивные зависимости React
+Конфиг: config_react_transitive.json
+{
+  "package_name": "react",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+Ожидание: loose-envify → js-tokens цепочка
+
+5. 🔄 ТЕСТИРОВАНИЕ ЭТАПА 4 (ОБРАТНЫЕ ЗАВИСИМОСТИ)
+-------------------------------------------------
+
+СЦЕНАРИЙ 5.1: Обратные зависимости в простом графе
+Конфиг: config_reverse_simple.json
+{
+  "package_name": "F",
+  "repository_url": "test_graphs/simple_graph.json",
+  "repository_mode": "graph_file",
+  "show_reverse_deps": true
+}
+Ожидание: F зависит от C и E
+
+СЦЕНАРИЙ 5.2: Обратные зависимости корневого пакета
+Конфиг: config_reverse_root.json
+{
+  "package_name": "A", 
+  "repository_url": "test_graphs/simple_graph.json",
+  "repository_mode": "graph_file",
+  "show_reverse_deps": true
+}
+Ожидание: "Обратные зависимости не найдены"
+
+СЦЕНАРИЙ 5.3: Обратные зависимости в тестовом репозитории
+Конфиг: config_reverse_test.json
+{
+  "package_name": "react",
   "repository_url": "test_repository",
+  "repository_mode": "test",
+  "show_reverse_deps": true
+}
+Ожидание: webapp зависит от react
+
+6. 🎨 ТЕСТИРОВАНИЕ ЭТАПА 5 (ВИЗУАЛИЗАЦИЯ)
+-----------------------------------------
+
+СЦЕНАРИЙ 6.1: Генерация DOT кода
+Конфиг: config_dot_only.json
+{
+  "package_name": "A",
+  "repository_url": "test_graphs/simple_graph.json",
+  "repository_mode": "graph_file",
+  "generate_graphviz": true,
+  "generate_image": false
+}
+Ожидание: Создает dependency_graph_A.dot
+
+СЦЕНАРИЙ 6.2: Полная визуализация (требует Graphviz)
+Конфиг: config_visualization.json
+{
+  "package_name": "A",
+  "repository_url": "test_graphs/cyclic_graph.json",
+  "repository_mode": "graph_file", 
+  "generate_graphviz": true,
+  "generate_image": true
+}
+Ожидание: Создает DOT и PNG файлы
+
+СЦЕНАРИЙ 6.3: Визуализация реального пакета
+Конфиг: config_viz_real.json
+{
+  "package_name": "express",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote",
+  "generate_graphviz": true,
+  "generate_image": true
+}
+Ожидание: Сложный граф с множеством зависимостей
+
+7. 🚨 ТЕСТИРОВАНИЕ ОБРАБОТКИ ОШИБОК
+-----------------------------------
+
+СЦЕНАРИЙ 7.1: Несуществующий пакет
+Конфиг: config_nonexistent.json
+{
+  "package_name": "nonexistent-package-12345",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote"
+}
+Ожидание: Ошибка получения зависимостей
+
+СЦЕНАРИЙ 7.2: Неправильный URL
+Конфиг: config_bad_url.json
+{
+  "package_name": "react",
+  "repository_url": "invalid-url",
+  "repository_mode": "remote"
+}
+Ожидание: Ошибка валидации URL
+
+СЦЕНАРИЙ 7.3: Отсутствующий тестовый репозиторий
+Конфиг: config_missing_test.json
+{
+  "package_name": "react",
+  "repository_url": "nonexistent_folder",
   "repository_mode": "test"
 }
+Ожидание: Ошибка "репозиторий не найден"
 
-## 4. ДОПОЛНИТЕЛЬНЫЕ ТЕСТОВЫЕ ПАКЕТЫ
-
-### 4.1. Популярные пакеты с зависимостями
-
-# Babel - транспайлер
+СЦЕНАРИЙ 7.4: Отсутствующий граф-файл
+Конфиг: config_missing_graph.json
 {
-  "package_name": "@babel/core",
+  "package_name": "A",
+  "repository_url": "nonexistent_graph.json",
+  "repository_mode": "graph_file"
+}
+Ожидание: Ошибка "файл графа не найден"
+
+СЦЕНАРИЙ 7.5: Network error simulation
+Конфиг: config_network_error.json
+{
+  "package_name": "react",
+  "repository_url": "https://invalid-registry.npmjs.org",
+  "repository_mode": "remote"
+}
+Ожидание: Ошибка сети
+
+8. 🏗️ КОМПЛЕКСНЫЕ ТЕСТОВЫЕ СЦЕНАРИИ
+------------------------------------
+
+СЦЕНАРИЙ 8.1: Полный анализ Express
+Конфиг: config_full_express.json
+{
+  "package_name": "express",
+  "repository_url": "https://registry.npmjs.org",
+  "repository_mode": "remote",
+  "show_reverse_deps": true,
+  "generate_graphviz": true,
+  "generate_image": true
+}
+Ожидание: Полный граф + обратные зависимости + визуализация
+
+СЦЕНАРИЙ 8.2: Анализ веб-приложения
+Конфиг: config_webapp_full.json
+{
+  "package_name": "webapp",
+  "repository_url": "test_repository",
+  "repository_mode": "test",
+  "show_reverse_deps": true,
+  "generate_graphviz": true,
+  "generate_image": true
+}
+Ожидание: Граф с транзитивными зависимостями
+
+СЦЕНАРИЙ 8.3: Сравнение разных пакетов
+Пакеты для сравнения:
+- express (много зависимостей)
+- lodash (нет зависимостей) 
+- react (зависимости в старых версиях)
+- chalk (мало зависимостей)
+
+СЦЕНАРИЙ 8.4: Производительность больших графов
+Конфиг: config_performance.json
+{
+  "package_name": "webpack",
   "repository_url": "https://registry.npmjs.org",
   "repository_mode": "remote"
 }
+Ожидание: Обработка 100+ зависимостей
 
-# Vue.js - фреймворк
-{
-  "package_name": "vue",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+📝 КОМАНДЫ ДЛЯ БЫСТРОГО ТЕСТИРОВАНИЯ
+-------------------------------------
 
-# Angular - фреймворк
-{
-  "package_name": "@angular/core",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+# Создание тестовых конфигов
+echo '{"package_name":"A","repository_url":"test_graphs/simple_graph.json","repository_mode":"graph_file"}' > config1.json
+echo '{"package_name":"express","repository_url":"https://registry.npmjs.org","repository_mode":"remote"}' > config2.json
 
-# Next.js - фреймворк React
-{
-  "package_name": "next",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+# Быстрое переключение между тестами
+cp config1.json config.json && python dependency_visualizer.py
+cp config2.json config.json && python dependency_visualizer.py
 
-# ESLint - линтер
-{
-  "package_name": "eslint",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+# Пакетное тестирование
+for config in config*.json; do
+  cp "$config" config.json
+  echo "=== Тестирование $config ==="
+  python dependency_visualizer.py
+  echo "============================="
+done
 
-### 4.2. Пакеты с нестандартной структурой
+🎯 ОЖИДАЕМЫЕ РЕЗУЛЬТАТЫ ТЕСТИРОВАНИЯ
+-------------------------------------
 
-# React DOM (отдельный пакет)
-{
-  "package_name": "react-dom",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+✅ УСПЕШНЫЕ СЦЕНАРИИ:
+- Корректная загрузка конфигурации
+- Построение полных графов зависимостей
+- Обнаружение циклических зависимостей
+- Генерация Graphviz визуализации
+- Обработка различных режимов работы
 
-# Node.js built-in modules (должны отсутствовать в npm)
-{
-  "package_name": "fs",
-  "repository_url": "https://registry.npmjs.org",
-  "repository_mode": "remote"
-}
+⚠️ ПРЕДУПРЕЖДЕНИЯ:
+- Пакеты без зависимостей
+- Сетевые задержки при remote режиме
+- Отсутствие Graphviz для визуализации
 
-## 5. КОМАНДЫ ДЛЯ БЫСТРОГО ТЕСТИРОВАНИЯ
+❌ ОШИБОЧНЫЕ СЦЕНАРИИ:
+- Невалидная конфигурация
+- Отсутствующие пакеты/файлы
+- Сетевые ошибки
+- Некорректные JSON файлы
 
-# Для быстрого переключения между конфигурациями создайте отдельные файлы:
+📊 МЕТРИКИ КАЧЕСТВА:
+- Время построения графа < 30 секунд
+- Потребление памяти < 500MB для больших графов
+- Корректность обнаружения циклов
+- Полнота графа зависимостей
+- Качество визуализации
 
-# config_react.json
-echo '{"package_name": "react", "repository_url": "https://registry.npmjs.org", "repository_mode": "remote"}' > config_react.json
-
-# config_express.json
-echo '{"package_name": "express", "repository_url": "https://registry.npmjs.org", "repository_mode": "remote"}' > config_express.json
-
-# config_webapp_test.json
-echo '{"package_name": "webapp", "repository_url": "test_repository", "repository_mode": "test"}' > config_webapp_test.json
-
-# Затем копируйте нужный конфиг:
-cp config_react.json config.json && python dependency_visualizer.py
-cp config_express.json config.json && python dependency_visualizer.py
-cp config_webapp_test.json config.json && python dependency_visualizer.py
-
-## 6. ОЖИДАЕМЫЕ РЕЗУЛЬТАТЫ
-
-✅ РАБОЧИЕ СЦЕНАРИИ:
-- React: зависимости в версиях до 19.x
-- Express: 20+ зависимостей
-- Webpack: 100+ зависимостей
-- Webapp (тест): 3 зависимости (react, express, axios)
-
-✅ ПАКЕТЫ БЕЗ ЗАВИСИМОСТЕЙ:
-- Lodash, Chalk и др.: "Прямые зависимости не найдены"
-
-❌ СЦЕНАРИИ С ОШИБКАМИ:
-- Корректные сообщения об ошибках
-- Не аварийное завершение
-
-## 7. ПОСЛЕДОВАТЕЛЬНОСТЬ ТЕСТИРОВАНИЯ
-
-1. Сначала тестовый режим (webapp)
-2. Затем простые пакеты (express)
-3. Сложные пакеты (webpack)
-4. Пакеты без зависимостей (lodash)
-5. Сценарии с ошибками
-
-## 8. ПРИМЕЧАНИЯ
-
-- Для тестового режима должен существовать каталог test_repository/
-- Некоторые пакеты (как React) могут не иметь зависимостей в последних версиях
-- Инструмент автоматически ищет версии с зависимостями
-- Все ошибки должны обрабатываться корректно без падения приложения
+---
+АВТОМАТИЗИРОВАННОЕ ТЕСТИРОВАНИЕ: Для CI/CD можно создать скрипт test_runner.py
+который будет автоматически прогонять все сценарии и генерировать отчет.
